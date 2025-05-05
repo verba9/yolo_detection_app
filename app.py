@@ -41,7 +41,7 @@ if file:
 
     if suffix in ['jpg', 'jpeg', 'png']:
         image = Image.open(temp_path)
-        st.image(image, caption="Исходное изображение", use_column_width=True)
+        st.image(image, use_container_width=True)
         results = model(temp_path)
         df = results.pandas().xyxy[0]
         boats = df[df['name'].isin(TARGET_CLASSES)]
