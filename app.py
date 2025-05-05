@@ -83,6 +83,7 @@ if file:
 
 # История и экспорт
 if st.button("Показать историю"):
+            
     # Проверка наличия файла history.json
     if os.path.exists("history.json"):
         try:
