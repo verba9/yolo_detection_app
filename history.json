@@ -1,1 +1,4 @@
-[]
+{"file": "p_s_14_2.jpeg", "timestamp": "2025-05-05T08:39:56.452473", "detected_boats": [{"xmin": 472.1163024902344, "ymin": 204.68992614746094, "xmax": 598.874755859375, "ymax": 391.4205017089844, "confidence": 0.41995003819465637, "class": 8, "name": "boat"}, {"xmin": 0.5678790807723999, "ymin": 354.692626953125, "xmax": 167.303466796875, "ymax": 494.29901123046875, "confidence": 0.27789780497550964, "class": 8, "name": "boat"}]}
+{"file": "istockphoto-1180205508-612x612.jpg", "timestamp": "2025-05-05T08:40:23.631600", "detected_boats": []}
+{"file": "istockphoto-1180205508-612x612.jpg", "timestamp": "2025-05-05T08:40:30.536383", "detected_boats": []}
+{"file": "istockphoto-1180205508-612x612.jpg", "timestamp": "2025-05-05T08:40:33.862044", "detected_boats": []}
