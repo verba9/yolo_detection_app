@@ -8,7 +8,7 @@ import json
 import pandas as pd
 from datetime import datetime
 
-st.title(" Мониторинг судов в порту (YOLOv5)")
+st.title("Мониторинг судов в порту (YOLOv5)")
 
 # Загрузка модели
 @st.cache_resource
@@ -27,8 +27,11 @@ def save_history(filename, results, filtered_objs):
         "timestamp": datetime.now().isoformat(),
         "detected_boats": filtered_objs
     }
-    with open("history.json", "a", encoding="utf-8") as f:
-        f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    try:
+        with open("history.json", "a", encoding="utf-8") as f:
+            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    except Exception as e:
+        st.error(f"Ошибка при сохранении истории: {e}")
 
 # Загрузка изображения или видео
 file = st.file_uploader("\U0001F4E5 Загрузите изображение или видео (судоходного порта)", type=["jpg", "jpeg", "png", "mp4"])
@@ -41,12 +44,12 @@ if file:
 
     if suffix in ['jpg', 'jpeg', 'png']:
         image = Image.open(temp_path)
-        st.image(image, caption="Исходное изображение", use_column_width=True)
+        st.image(image, use_container_width=True)
         results = model(temp_path)
         df = results.pandas().xyxy[0]
         boats = df[df['name'].isin(TARGET_CLASSES)]
         results.render()
-        st.image(results.ims[0], caption=f"Обнаружено судов: {len(boats)}", use_column_width=True)
+        st.image(results.ims[0], caption=f"Обнаружено судов: {len(boats)}", use_container_width=True)
         save_history(file.name, results, boats.to_dict(orient="records"))
 
     elif suffix == 'mp4':
@@ -80,10 +83,16 @@ if file:
 
 # История и экспорт
 if st.button("Показать историю"):
-    with open("history.json", "r", encoding="utf-8") as f:
-        lines = [json.loads(l) for l in f.readlines()]
-    df = pd.json_normalize(lines, record_path='detected_boats', meta=['file', 'timestamp'])
-    st.dataframe(df)
-    df.to_excel("detected_ships.xlsx", index=False)
-    st.success(" Отчёт сохранён как detected_ships.xlsx")
-    
+    # Проверка наличия файла history.json
+    if os.path.exists("history.json"):
+        try:
+            with open("history.json", "r", encoding="utf-8") as f:
+                lines = [json.loads(l) for l in f.readlines()]
+            df = pd.json_normalize(lines, record_path='detected_boats', meta=['file', 'timestamp'])
+            st.dataframe(df)
+            df.to_excel("detected_ships.xlsx", index=False)
+            st.success("Отчёт сохранён как detected_ships.xlsx")
+        except json.JSONDecodeError as e:
+            st.error(f"Ошибка при чтении файла history.json: {e}")
+    else:
+        st.warning("Файл history.json не найден.")
